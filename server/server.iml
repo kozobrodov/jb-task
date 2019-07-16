@@ -32,6 +32,39 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: io.ktor:ktor-server-core:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.40" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.40" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:atomicfu:0.12.9" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="Maven: com.typesafe:config:1.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:kotlinx-io-jvm:0.1.10" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:atomicfu-common:0.12.9" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:kotlinx-io:0.1.10" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:kotlinx-coroutines-io-jvm:0.1.10" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:kotlinx-coroutines-io:0.1.10" level="project" />
+    <orderEntry type="library" name="Maven: io.ktor:ktor-utils-jvm:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: io.ktor:ktor-http-jvm:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-reflect:1.3.40" level="project" />
+    <orderEntry type="library" name="Maven: io.ktor:ktor-server-netty:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: io.ktor:ktor-server-host-common:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: io.ktor:ktor-http-cio-jvm:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: io.ktor:ktor-network:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-http2:4.1.36.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.36.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.36.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.36.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.36.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.36.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.36.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.36.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.alpn:alpn-api:1.1.3.v20160715" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-kqueue:4.1.36.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-unix-common:4.1.36.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-epoll:4.1.36.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.3.41" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.41" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:13.0" level="project" />
