@@ -12,6 +12,7 @@
     <artifactId>server</artifactId>
 
     <properties>
+        <logback_version>1.2.1</logback_version>
         <ktor.version>1.2.2</ktor.version>
 
         <main.class>io.ktor.server.netty.EngineMain</main.class>
@@ -39,6 +40,11 @@
             <groupId>io.ktor</groupId>
             <artifactId>ktor-jackson</artifactId>
             <version>${ktor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback_version}</version>
         </dependency>
     </dependencies>
 
