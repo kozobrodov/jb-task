@@ -1,20 +1,26 @@
 package ru.kozobrodov
 
+import com.fasterxml.jackson.databind.SerializationFeature
+import io.ktor.application.Application
 import io.ktor.application.call
-import io.ktor.http.ContentType
-import io.ktor.response.respondText
+import io.ktor.application.install
+import io.ktor.features.ContentNegotiation
+import io.ktor.jackson.jackson
+import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.routing
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.*
 
-fun main() {
-    val server = embeddedServer(Netty, port = 8081) {
-        routing {
-            get("/") {
-                call.respondText("Hello, world!", ContentType.Text.Plain)
-            }
+@Suppress("unused")
+fun Application.module() {
+    install(ContentNegotiation) {
+        jackson {
+            enable(SerializationFeature.INDENT_OUTPUT)
         }
     }
-    server.start(true)
+
+    routing {
+        get("/") {
+            call.respond("Hello, world!")
+        }
+    }
 }
