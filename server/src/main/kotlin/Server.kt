@@ -33,7 +33,6 @@ fun Application.module() {
         }
         exception<NotDirectoryException> {
             call.respond(HttpStatusCode.BadRequest)
-            throw it
         }
     }
 
