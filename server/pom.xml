@@ -46,6 +46,11 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback_version}</version>
         </dependency>
+        <dependency>
+            <groupId>ru.kozobrodov</groupId>
+            <artifactId>file-tree-data-provider</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

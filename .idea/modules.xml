@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/file-tree-data-provider/file-tree-data-provider.iml" filepath="$PROJECT_DIR$/file-tree-data-provider/file-tree-data-provider.iml" />
       <module fileurl="file://$PROJECT_DIR$/jb-task.iml" filepath="$PROJECT_DIR$/jb-task.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
     </modules>

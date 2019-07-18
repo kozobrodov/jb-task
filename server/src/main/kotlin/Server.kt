@@ -12,7 +12,9 @@ import io.ktor.jackson.jackson
 import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.routing
+import ru.kozobrodov.filetreedataprovider.FileDataProvider
 import java.io.FileNotFoundException
+import java.nio.file.NotDirectoryException
 
 @Suppress("unused")
 fun Application.module() {
@@ -29,6 +31,10 @@ fun Application.module() {
         exception<FileNotFoundException> {
             call.respond(HttpStatusCode.NotFound)
         }
+        exception<NotDirectoryException> {
+            call.respond(HttpStatusCode.BadRequest)
+            throw it
+        }
     }
 
     routing {
@@ -40,7 +46,7 @@ fun Application.module() {
                         .config
                         .propertyOrNull("ktor.application.baseDir")
                         ?.getString() ?: "/"
-                // todo
+                call.respond(FileDataProvider(baseDir).list(path))
             }
         }
     }

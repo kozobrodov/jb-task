@@ -7,9 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="server" />
+        <module name="file-tree-data-provider" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="file-tree-data-provider" target="1.5" />
       <module name="jb-task" target="1.5" />
       <module name="server" target="1.5" />
     </bytecodeTargetLevel>
