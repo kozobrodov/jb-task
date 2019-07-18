@@ -60,6 +60,8 @@ class FileDataProvider(private val basePath: String) {
         var path = currentBase
         while (pathSegmentsIterator.hasNext()) {
             val subPath = path.resolve(pathSegmentsIterator.next())
+            if (Files.notExists(subPath))
+                throw FileNotFoundException("File doesn't exist")
             if (typeToHandler.containsKey(subPath.getType())) {
                 return typeToHandler[subPath.getType()]
                         ?.invoke(this, origin, subPath, pathSegmentsIterator)
@@ -67,8 +69,6 @@ class FileDataProvider(private val basePath: String) {
             }
             path = subPath
         }
-        if (Files.notExists(path))
-            throw FileNotFoundException("File doesn't exist")
         return Files.list(path).use {
             it.map {
                 path -> FileData(
