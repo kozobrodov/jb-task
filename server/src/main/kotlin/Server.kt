@@ -2,6 +2,7 @@ package ru.kozobrodov
 
 import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.Application
+import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
@@ -31,8 +32,16 @@ fun Application.module() {
     }
 
     routing {
-        get("/") {
-            call.respond("Hello, world!")
+        get("/{path...}") {
+            val path = call.parameters.getAll("path")
+            if (path != null) {
+                val baseDir = application
+                        .environment
+                        .config
+                        .propertyOrNull("ktor.application.baseDir")
+                        ?.getString() ?: "/"
+                // todo
+            }
         }
     }
 }
