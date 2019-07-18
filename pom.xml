@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>server</module>
-        <module>file-walker</module>
+        <module>file-tree-data-provider</module>
     </modules>
 
     <properties>
