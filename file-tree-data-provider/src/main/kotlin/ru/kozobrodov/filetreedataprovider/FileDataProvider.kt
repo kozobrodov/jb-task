@@ -70,13 +70,7 @@ class FileDataProvider(private val basePath: String) {
             path = subPath
         }
         return Files.list(path).use {
-            it.map {
-                path -> FileData(
-                    origin.resolveIgnoreFS(path.fileName),
-                    path.getType(),
-                    path.isExpandable()
-            )
-            }.toList()
+            it.map { p -> p.toFileData(origin) }.toList()
         }
     }
 
@@ -135,6 +129,16 @@ class FileDataProvider(private val basePath: String) {
      */
     private fun Path.resolveIgnoreFS(other: Path): String =
             this.resolve(other.toString()).toString()
+
+    /**
+     * Creates new [FileData] from this path and it's origin path
+     */
+    private fun Path.toFileData(origin: Path): FileData =
+            FileData(
+                    origin.resolveIgnoreFS(this.fileName),
+                    this.getType(),
+                    this.isExpandable()
+            )
 }
 
 data class FileData(val path: String, val type: String, val isExpandable: Boolean)
