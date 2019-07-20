@@ -29,10 +29,10 @@ fun Application.module() {
             call.respond(HttpStatusCode.NotImplemented, it.message ?: "Not implemented")
         }
         exception<FileNotFoundException> {
-            call.respond(HttpStatusCode.NotFound)
+            call.respond(HttpStatusCode.NotFound, it.message ?: "File was not found")
         }
         exception<NotDirectoryException> {
-            call.respond(HttpStatusCode.BadRequest)
+            call.respond(HttpStatusCode.BadRequest, it.message ?: "Not a directory")
         }
     }
 
