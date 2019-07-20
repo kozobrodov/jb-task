@@ -4,8 +4,27 @@
     <meta charset="utf-8">
     <title>File tree test page</title>
 
+    <link href="css/fontawesome-all.css" rel="stylesheet">
+    <link href="css/file-tree.css" rel="stylesheet">
 </head>
 
 <body>
+    <ul class="treeView">
+        <li>
+            <span class="node"><i class="fas fa-folder"></i> /</span>
+            <ul class="nested">
+                <li><span class="node"><i class="fas fa-file-pdf"></i> f1</span></li>
+                <li>
+                    <span class="node"><i class="fas fa-file-archive"></i> f2</span>
+                    <ul class="nested">
+                        <li><span class="node"><i class="fas fa-file-alt"></i> f3</span></li>
+                    </ul>
+                </li>
+                <li><span class="node"><i class="fas fa-file-alt"></i> f3</span></li>
+            </ul>
+        </li>
+    </ul>
+    <span class="loader"></span>
 </body>
+
 </html>

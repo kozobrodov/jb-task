@@ -1,0 +1,65 @@
+ul, .treeView {
+    list-style-type: none;
+}
+
+.treeView {
+    margin:0;
+    padding:0;
+}
+
+.treeView .node {
+    cursor:pointer;
+}
+
+/* Loader: */
+
+.loader {
+  position: relative;
+  width: 1em;
+  height: 1em;
+  display: inline-flex;
+  background-color: transparent;
+  border: 5px solid #e3dddc;
+  border-radius: 50%;
+}
+
+.loader:after {
+  position: absolute;
+  content: "";
+  top: 0px;
+  left: 0px;
+  width: 1em;
+  height: 1em;
+  padding: 3px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+  border-radius: 50%;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  animation: ringrotate .8s infinite ease-in-out;
+  -webkit-animation: ringrotate .8s infinite ease-in-out;
+}
+
+/* Loader animation: */
+
+@keyframes ringrotate {
+  0% {
+    transform: rotateZ(0deg);
+    -webkit-transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(360deg);
+    -webkit-transform: rotateZ(360deg);
+  }
+}
+@-webkit-keyframes ringrotate {
+  0% {
+    transform: rotateZ(0deg);
+    -webkit-transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(360deg);
+    -webkit-transform: rotateZ(360deg);
+  }
+}
