@@ -10,7 +10,9 @@ There two main modules here:
 about files in specific directory
 
 ### Configuration
-TODO
+Base directory (those one on top of which application works) is configured in
+[`application.conf`](https://github.com/kozobrodov/jb-task/blob/master/server/src/main/resources/application.conf)
+file.
 
 ### Build & run
 
@@ -20,4 +22,8 @@ This project can be built by maven:
 mvn clean package
 ```
 
-TODO
+Then it can be run by starting result `jar`:
+
+```
+java -jar server/target/server-1.0-SNAPSHOT-jar-with-dependencies.jar
+```
