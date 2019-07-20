@@ -72,7 +72,7 @@ class FileDataProvider(private val basePath: String) {
         return Files.list(path).use {
             it.map {
                 path -> FileData(
-                    "$origin/${path.fileName}",
+                    origin.resolveIgnoreFS(path.fileName),
                     path.getType(),
                     path.isExpandable()
             )
@@ -128,6 +128,13 @@ class FileDataProvider(private val basePath: String) {
      */
     private fun Path.isExpandable(): Boolean =
             Files.isDirectory(this) or typeToHandler.containsKey(this.getType())
+
+    /**
+     * Same as [Path.resolve], but ignores different file
+     * systems and returns string instead of [Path]
+     */
+    private fun Path.resolveIgnoreFS(other: Path): String =
+            this.resolve(other.toString()).toString()
 }
 
 data class FileData(val path: String, val type: String, val isExpandable: Boolean)
