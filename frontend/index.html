@@ -24,7 +24,15 @@
             </ul>
         </li>
     </ul>
+    <div id="treeViewHolder"></div>
     <span class="loader"></span>
+    <script src="js/jquery-3.4.1.js"></script>
+    <script src="js/fileTree.js"></script>
+    <script>
+        $('#treeViewHolder').fileTree({
+            jsonLocation: 'fixed-tree.json'
+        });
+    </script>
 </body>
 
 </html>

@@ -1,4 +1,142 @@
 (function ( $ ) {
+
+    /**
+     * Implementation of file data tree which
+     * uses index map (from file path to tree node)
+     * for faster and easier access to tree nodes
+     * by file path.
+     */
+    var getIndexedFileDataTree = function(root) {
+        function IndexedFileDataTree() {
+            this.root = root;
+
+            // Index tree for easier access to nodes by path
+            var pathToNodeIndex = {}
+            function index(node) {
+                pathToNodeIndex[node.fileData.path] = node;
+                if (node.fileData.expandable)
+                    node.children.forEach(function(e) {
+                        index(e);
+                    });
+            }
+            function removeFromIndex(node) {
+                delete pathToNodeIndex[node.fileData.path];
+                if (node.fileData.expandable)
+                    node.children.forEach(function(e) {
+                        removeFromIndex(e);
+                    });
+            }
+            index(this.root);
+
+            // Define member functions
+
+            /**
+             * Get node by file path
+             */
+            this.get = function(path) {
+                var node = pathToNodeIndex[path];
+                if (node == null) {
+                    console.error("No node was found by path: " + path);
+                    return null;
+                }
+                return node;
+            }
+
+            /**
+             * Add node to node with specific file path
+             */
+            this.add = function(parentPath, node) {
+                index(node);
+                pathToNodeIndex[parentPath].children.push(node);
+            }
+
+            /**
+             * Replace all subnodes of node with specific
+             * file path
+             */
+            this.set = function(parentPath, nodes) {
+                var node = get(parentPath);
+                if (node.fileData.expandable)
+                    node.children.forEach(removeFromIndex);
+                node.children = nodes;
+                nodes.forEach(index);
+            }
+
+            /**
+             * Remove all subnodes of node with specific
+             * file path
+             */
+            this.clear = function(parentPath) {
+                var node = get(parentPath);
+                if (node.fileData.expandable)
+                    node.children.forEach(removeFromIndex);
+                node.children = [];
+            }
+        }
+        return new IndexedFileDataTree();
+    }
+
+    /**
+     * State holder which uses `window.localStorage` to
+     * store current UI state (see `defaultConfig` for
+     * details)
+     */
+    var getLocalStorageStateHolder = function() {
+        function LocalStorageStateHolder() {
+            // Init root node
+            function initState() {
+                var rootNode = {
+                    fileData: {path: '', type: 'directory', isExpandable: true},
+                    children: []
+                };
+                localStorage.setItem('ru.kozobrodov.fileTree', JSON.stringify(rootNode));
+                return rootNode;
+            }
+            this.tree = getIndexedFileDataTree(
+                JSON.parse(localStorage.getItem('ru.kozobrodov.fileTree')) || initState()
+            );
+
+            this.addNodes = function(path, children) {
+                this.tree.set(path, children);
+            }
+
+            this.clearNode = function(path) {
+                this.tree.clear(path);
+            }
+
+            this.getCurrentState = function() {
+                return this.tree.root;
+            }
+        }
+        return new LocalStorageStateHolder();
+    }
+
+    /**
+     * Data provider which loads the full directory
+     * structures as JSON file
+     */
+    var getJsonDataProvider = function(jsonPath) {
+        function JsonDataProvider() {
+            this.load = function(callback) {
+                $.ajax({
+                    url: jsonPath,
+                    dataType: 'json',
+                    context : this,
+                    success: function (data) {
+                        this.tree = getIndexedFileDataTree(data);
+                        callback();
+                    }
+                });
+            }
+
+            this.list = function(path) {
+                return this.tree.get(path).children;
+            }
+
+        }
+        return new JsonDataProvider();
+    }
+
     /**
      * Default configuration of the plugin
      */
@@ -7,9 +145,10 @@
          * Object which handles changes on file tree state.
          *
          * Must provide the following methods:
-         * - `addNodes(paths)` which is called when expandable
-         *   file is opened (expanded)
-         * - `removeNode(path)` which is called when expandable
+         * - `addNodes(parentPath, fileData)` (where `fileData`
+         *   is an array of `FileData`(see below)) which is
+         *   called when expandable file is opened (expanded)
+         * - `clearNode(path)` which is called when expandable
          *   file is closed (collapsed)
          * - `getCurrentState()` which returns tree representing
          *   current state
@@ -24,7 +163,7 @@
          * }
          * ```
          */
-        stateHolder: {},
+        stateHolder: getLocalStorageStateHolder(),
 
         /**
          * Object which provides loadable data, must provide
@@ -47,7 +186,7 @@
         typeToIconClassMap: {
             "": ""
         }
-    }
+    };
 
     /**
      * Plugin entry point. Defines JQuery function `fileTree`
@@ -57,7 +196,29 @@
      * details).
      */
     $.fn.fileTree = function(config) {
-        return this;
+        var settings = $.extend(defaultConfig, config);
+        if (typeof settings.jsonLocation !== 'undefined') {
+            settings.dataProvider = getJsonDataProvider(settings.jsonLocation);
+        }
+        return this.each(function() {
+            settings.dataProvider.load(function() {
+                // //todo: do something here
+            });
+        });
     }
 
+    // Init:
+    //      Load state
+    //      If state exist:
+    //          render existing state (node by node)
+    //      else
+    //          Get data for root
+    //          Render it
+    //          Update state
+    //
+    // Keeping state
+    //
+    // Getting data (and resetting it)
+    //
+    // Rendering - node or subtree
 }( jQuery ));
