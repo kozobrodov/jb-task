@@ -7,6 +7,10 @@ ul, .treeView {
     padding:0;
 }
 
+.treeView span {
+    white-space:nowrap;
+}
+
 .treeView .expandable {
     cursor:pointer;
 }
