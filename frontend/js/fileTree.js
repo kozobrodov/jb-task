@@ -46,8 +46,9 @@
              * Add node to node with specific file path
              */
             this.add = function(parentPath, node) {
+                var parentNode = get(parentPath);
                 index(node);
-                pathToNodeIndex[parentPath].children.push(node);
+                parentNode.children.push(node);
             }
 
             /**
@@ -55,11 +56,12 @@
              * file path
              */
             this.set = function(parentPath, nodes) {
-                var node = get(parentPath);
+                var node = this.get(parentPath);
                 if (node.fileData.expandable)
                     node.children.forEach(removeFromIndex);
                 node.children = nodes;
                 nodes.forEach(index);
+                return node;
             }
 
             /**
@@ -67,7 +69,7 @@
              * file path
              */
             this.clear = function(parentPath) {
-                var node = get(parentPath);
+                var node = this.get(parentPath);
                 if (node.fileData.expandable)
                     node.children.forEach(removeFromIndex);
                 node.children = [];
@@ -86,22 +88,35 @@
             // Init root node
             function initState() {
                 var rootNode = {
-                    fileData: {path: '', type: 'directory', isExpandable: true},
+                    fileData: {path: '', type: 'directory', expandable: true},
                     children: []
                 };
                 localStorage.setItem('ru.kozobrodov.fileTree', JSON.stringify(rootNode));
                 return rootNode;
             }
-            this.tree = getIndexedFileDataTree(
-                JSON.parse(localStorage.getItem('ru.kozobrodov.fileTree')) || initState()
-            );
+            var stateString = localStorage.getItem('ru.kozobrodov.fileTree');
+            if (stateString != null && typeof stateString != 'undefined') {
+                this.tree = getIndexedFileDataTree(JSON.parse(stateString));
+            } else {
+                this.tree = getIndexedFileDataTree(initState());
+            }
+
+            this.saveState = function() {
+                localStorage.setItem(
+                    'ru.kozobrodov.fileTree',
+                    JSON.stringify(this.getCurrentState())
+                );
+            }
 
             this.addNodes = function(path, children) {
-                this.tree.set(path, children);
+                var updatedNode = this.tree.set(path, children);
+                this.saveState();
+                return updatedNode;
             }
 
             this.clearNode = function(path) {
                 this.tree.clear(path);
+                this.saveState();
             }
 
             this.getCurrentState = function() {
@@ -138,6 +153,112 @@
     }
 
     /**
+     * Central part of this plugin, responsible for rendering,
+     * UI behaviour and data/state orchestration
+     */
+    function Core(settings) {
+        /**
+         * Extracts file name from path. In case of root
+         * directory returns element with '<root>' text
+         */
+        function extractFileName(path) {
+            if (path === "") { // Extra case - root directory
+                return $('<span>').addClass('meta').append('&lt;root&gt;');
+            }
+            return path.replace(/^.*[\\\/]/, '');
+        }
+
+        /**
+         * Returns icon class by file type or default icon class
+         */
+        function typeToIcon(type) {
+            var clazz = settings.typeToIconClassMap[type];
+            if (clazz != null) {
+                return clazz;
+            }
+            return settings.defaultIconClass;
+        }
+
+        function getLoader() {
+            return $('<div>').addClass('loader');
+        }
+
+        /**
+         * Copies tree node without its children
+         */
+        function copyChildren(children) {
+            var result = [];
+            children.forEach(function(child) {
+                var copy = {};
+                copy.fileData = $.extend({}, child.fileData);
+                if (child.fileData.expandable)
+                    copy.children = [] // Don't need to copy children
+                result.push(copy);
+            });
+            return result;
+        }
+
+        function expandableNodeClickHandler() {
+            var element = $(this);
+            var parent = element.parent();
+            var path = element.attr('path');
+            if (parent.has('ul.nested').length > 0) {
+                // Collapse
+                parent.children('ul.nested').remove();
+                settings.stateHolder.clearNode(path);
+            } else {
+                // Expand
+                parent.append(getLoader());
+                var data = settings.dataProvider.list(path);
+                var node = settings.stateHolder.addNodes(path, copyChildren(data));
+                render(parent.empty(), node);
+            }
+        }
+
+        function renderItem(element, node) {
+            var itemContent = $('<span>')
+                .attr('path', node.fileData.path)
+                .append(
+                    $('<i>').addClass(typeToIcon(node.fileData.type)),
+                    ' ',
+                    extractFileName(node.fileData.path)
+                );
+            if (node.fileData.expandable) {
+                itemContent
+                    .click(expandableNodeClickHandler)
+                    .addClass('expandable');
+            }
+            return $('<li>').append(itemContent).appendTo(element);
+        }
+
+        function render(element, tree, deepRender) {
+            var item = renderItem(element, tree);
+            if (tree.fileData.expandable) {
+                if (tree.children.length > 0) {
+                    var nested = $('<ul>').addClass('nested');
+                    item.append(nested);
+                    tree.children.forEach(function(subnode) {
+                        if (deepRender) {
+                            render(nested, subnode, deepRender);
+                        } else {
+                            renderItem(nested, subnode);
+                        }
+                    });
+                }
+            }
+        }
+
+        this.init = function(element) {
+            // Create view container-list
+            var container = $('<ul>').addClass('treeView').appendTo(element);
+
+            // And render current state
+            var tree = settings.stateHolder.getCurrentState();
+            render(container, tree, true);
+        }
+    }
+
+    /**
      * Default configuration of the plugin
      */
     var defaultConfig = {
@@ -158,7 +279,7 @@
          *
          * ```
          * {
-         *     fileData: {path: "<file_path>", type: "<file_type>", isExpandable: <boolean>},
+         *     fileData: {path: "<file_path>", type: "<file_type>", expandable: <boolean>},
          *     children: <array_of_subnodes>
          * }
          * ```
@@ -174,7 +295,7 @@
          * {
          *     path: "<file_path>",
          *     type: "<file_type>",
-         *     isExpandable: <boolean>
+         *     expandable: <boolean>
          * }
          * ```
          */
@@ -184,8 +305,15 @@
          * Map of file MIME type to appropriate icons classes
          */
         typeToIconClassMap: {
-            "": ""
-        }
+            "directory": "fas fa-folder",
+            "application/pdf": "fas fa-file-pdf",
+            "application/x-rar": "fas fa-file-archive",
+            "application/zip": "fas fa-file-archive",
+            "<unknown_type>": "fas fa-file",
+            "image/jpeg": "fas fa-file-image",
+            "text/plain": "fas fa-file-alt"
+        },
+        defaultIconClass: "fas fa-file"
     };
 
     /**
@@ -200,25 +328,10 @@
         if (typeof settings.jsonLocation !== 'undefined') {
             settings.dataProvider = getJsonDataProvider(settings.jsonLocation);
         }
-        return this.each(function() {
+        return this.each(function(index, e) {
             settings.dataProvider.load(function() {
-                // //todo: do something here
+                new Core(settings).init($(e));
             });
         });
     }
-
-    // Init:
-    //      Load state
-    //      If state exist:
-    //          render existing state (node by node)
-    //      else
-    //          Get data for root
-    //          Render it
-    //          Update state
-    //
-    // Keeping state
-    //
-    // Getting data (and resetting it)
-    //
-    // Rendering - node or subtree
 }( jQuery ));
