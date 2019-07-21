@@ -21,7 +21,7 @@ for displaying file tree, appropriate styles, fonts, etc and three test pages:
 — all logic is "in-browser"
 1. [service-index.html](https://github.com/kozobrodov/jb-task/blob/master/frontend/service-index.html)
 uses `ServiceDataProvider` and expects that server is running on `http://localhost:8081/` host
-1. [multiple-trees.index.html](https://github.com/kozobrodov/jb-task/blob/master/frontend/multiple-trees.index.html)
+1. [multiple-trees-index.html](https://github.com/kozobrodov/jb-task/blob/master/frontend/multiple-trees-index.html)
 uses both types of data provider and demonstrates that it's possible to have several trees on the
 same page
 
