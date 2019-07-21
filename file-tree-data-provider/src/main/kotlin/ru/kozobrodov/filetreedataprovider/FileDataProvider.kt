@@ -146,6 +146,7 @@ class FileDataProvider(private val basePath: String) {
 
 data class FileData(val path: String, val type: String, val isExpandable: Boolean)
 
+private val tika = Tika()
 /**
  * Extension method which allows to get file MIME type,
  * if possible.
@@ -162,7 +163,6 @@ private fun Path.getType(): String {
 
     // Try Apache Tika
     if (type == null) {
-        val tika = Tika()
         try {
             type = tika.detect(this.toString()) // doesn't access file
 
