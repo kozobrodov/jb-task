@@ -1,6 +1,8 @@
 package ru.kozobrodov.filetreedataprovider
 
+import org.apache.tika.Tika
 import java.io.FileNotFoundException
+import java.io.IOException
 import java.nio.file.*
 import kotlin.streams.toList
 
@@ -155,5 +157,21 @@ data class FileData(val path: String, val type: String, val isExpandable: Boolea
 private fun Path.getType(): String {
     if (Files.isDirectory(this))
         return "directory" // To be less platform-specific
-    return Files.probeContentType(this) ?: "<unknown_type>"
+
+    var type = Files.probeContentType(this)
+
+    // Try Apache Tika
+    if (type == null) {
+        val tika = Tika()
+        try {
+            type = tika.detect(this.toString()) // doesn't access file
+
+            if (type == null) {
+                // try to guess by accessing file contents
+                type = tika.detect(this)
+            }
+        } catch (ignore: IOException) {}
+    }
+
+    return type ?: "<unknown_type>"
 }
