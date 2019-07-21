@@ -14,13 +14,16 @@ directory [test-data](https://github.com/kozobrodov/jb-task/tree/master/test-dat
 
 There is also a [frontend](https://github.com/kozobrodov/jb-task/tree/master/frontend) directory
 which contains code of JQuery [plugin](https://github.com/kozobrodov/jb-task/blob/master/frontend/js/fileTree.js)
-for displaying file tree, appropriate styles, fonts, etc and two test pages:
+for displaying file tree, appropriate styles, fonts, etc and three test pages:
 
 1. [index.html](https://github.com/kozobrodov/jb-task/blob/master/frontend/index.html) uses
 `JsonDataProvider`, so it's possible to test plugin without any client-server communication
 — all logic is "in-browser"
 1. [service-index.html](https://github.com/kozobrodov/jb-task/blob/master/frontend/service-index.html)
 uses `ServiceDataProvider` and expects that server is running on `http://localhost:8081/` host
+1. [multiple-trees.index.html](https://github.com/kozobrodov/jb-task/blob/master/frontend/multiple-trees.index.html)
+uses both types of data provider and demonstrates that it's possible to have several trees on the
+same page
 
 ### Configuration
 Base directory (those one on top of which application works) is configured in

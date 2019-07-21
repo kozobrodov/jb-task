@@ -93,18 +93,19 @@
      * store current UI state (see `defaultConfig` for
      * details)
      */
-    var getLocalStorageStateHolder = function() {
+    var getLocalStorageStateHolder = function(id) {
         function LocalStorageStateHolder() {
+            var storageKey = 'ru.kozobrodov.fileTree$' + id
             // Init root node
             function initState() {
                 var rootNode = {
                     fileData: {path: '', type: 'directory', expandable: true},
                     children: []
                 };
-                localStorage.setItem('ru.kozobrodov.fileTree', JSON.stringify(rootNode));
+                localStorage.setItem(storageKey, JSON.stringify(rootNode));
                 return rootNode;
             }
-            var stateString = localStorage.getItem('ru.kozobrodov.fileTree');
+            var stateString = localStorage.getItem(storageKey);
             if (stateString != null && typeof stateString != 'undefined') {
                 this.tree = getIndexedFileDataTree(JSON.parse(stateString));
             } else {
@@ -113,7 +114,7 @@
 
             this.saveState = function() {
                 localStorage.setItem(
-                    'ru.kozobrodov.fileTree',
+                    storageKey,
                     JSON.stringify(this.getCurrentState())
                 );
             }
@@ -372,7 +373,14 @@
          * }
          * ```
          */
-        stateHolder: getLocalStorageStateHolder(),
+        stateHolder: null,
+
+        /**
+         * Identifier of file tree. Used internally to differentiate
+         * different trees, so that it's possible to use several
+         * trees on single page
+         */
+        treeId: '',
 
         /**
          * Object which provides loadable data, must provide
@@ -415,7 +423,14 @@
      * details).
      */
     $.fn.fileTree = function(config) {
-        var settings = $.extend(defaultConfig, config);
+        var settings = $.extend({}, defaultConfig, config);
+
+        // Set state holder
+        if (settings.hasOwnProperty('stateHolder') && settings.stateHolder == null) {
+            settings.stateHolder = getLocalStorageStateHolder(settings.treeId);
+        }
+
+        // Set data provider
         if (settings.hasOwnProperty('dataProvider') && settings.dataProvider == null) {
             if (settings.hasOwnProperty('serviceUrl') && settings.serviceUrl != null) {
                 settings.dataProvider = getServiceDataProvider(settings.serviceUrl);
