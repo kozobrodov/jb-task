@@ -226,10 +226,13 @@
         }
 
         function renderItem(element, node) {
+            var icon = $('<i>')
+                    .addClass(typeToIcon(node.fileData.type))
+                    .attr('title', node.fileData.type);
             var itemContent = $('<span>')
                 .attr('path', node.fileData.path)
                 .append(
-                    $('<i>').addClass(typeToIcon(node.fileData.type)),
+                    icon,
                     ' ',
                     extractFileName(node.fileData.path)
                 );
