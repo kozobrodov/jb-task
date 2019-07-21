@@ -1,5 +1,9 @@
 (function ( $ ) {
 
+    function isEmptyNode(node) {
+        return node.hasOwnProperty('empty') && node.empty;
+    }
+
     /**
      * Implementation of file data tree which
      * uses index map (from file path to tree node)
@@ -13,6 +17,9 @@
             // Index tree for easier access to nodes by path
             var pathToNodeIndex = {}
             function index(node) {
+                if (isEmptyNode(node)) {
+                    return; // No need to index that
+                }
                 pathToNodeIndex[node.fileData.path] = node;
                 if (node.fileData.expandable)
                     node.children.forEach(function(e) {
@@ -20,6 +27,9 @@
                     });
             }
             function removeFromIndex(node) {
+                if (isEmptyNode) {
+                    return;
+                }
                 delete pathToNodeIndex[node.fileData.path];
                 if (node.fileData.expandable)
                     node.children.forEach(function(e) {
@@ -199,6 +209,10 @@
         function copyChildren(children) {
             var result = [];
             children.forEach(function(child) {
+                if (isEmptyNode(child)) {
+                    result.push(child); // No need to copy that
+                    return;
+                }
                 var copy = {};
                 copy.fileData = $.extend({}, child.fileData);
                 if (child.fileData.expandable)
@@ -220,6 +234,10 @@
                 // Expand
                 parent.append(getLoader());
                 var data = settings.dataProvider.list(path);
+                if (data.length == 0) {
+                    var emptyNode = {empty:true};
+                    data.push(emptyNode);
+                }
                 var node = settings.stateHolder.addNodes(path, copyChildren(data));
                 render(parent.empty(), node);
             }
@@ -244,14 +262,27 @@
             return $('<li>').append(itemContent).appendTo(element);
         }
 
+        function renderEmptyItem(element) {
+            $('<li>')
+                .append($('<span>').addClass('meta').append('&lt;empty&gt;'))
+                .appendTo(element);
+        }
+
         function render(element, tree, deepRender) {
+            if (isEmptyNode(tree)) {
+                renderEmptyItem(element);
+                return;
+            }
+
             var item = renderItem(element, tree);
             if (tree.fileData.expandable) {
                 if (tree.children.length > 0) {
                     var nested = $('<ul>').addClass('nested');
                     item.append(nested);
                     tree.children.forEach(function(subnode) {
-                        if (deepRender) {
+                        if (isEmptyNode(subnode)) {
+                            renderEmptyItem(nested);
+                        } else if (deepRender) {
                             render(nested, subnode, deepRender);
                         } else {
                             renderItem(nested, subnode);
