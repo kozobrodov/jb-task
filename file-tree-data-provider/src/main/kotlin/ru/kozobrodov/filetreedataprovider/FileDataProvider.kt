@@ -1,5 +1,7 @@
 package ru.kozobrodov.filetreedataprovider
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.apache.tika.Tika
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -30,7 +32,7 @@ class FileDataProvider(private val basePath: String) {
      *                     as list of it's segments
      * @return list of [FileData]
      */
-    fun list(pathSegments: List<String>): List<FileData> {
+    suspend fun list(pathSegments: List<String>): List<FileData> = withContext(Dispatchers.IO) {
         val origin = if (pathSegments.isNotEmpty()) {
             pathSegments
                 .map { Paths.get(it) }
@@ -38,7 +40,7 @@ class FileDataProvider(private val basePath: String) {
         } else {
             Paths.get("")
         }
-        return list(origin, Paths.get(basePath), pathSegments.iterator())
+        list(origin, Paths.get(basePath), pathSegments.iterator())
     }
 
     /**

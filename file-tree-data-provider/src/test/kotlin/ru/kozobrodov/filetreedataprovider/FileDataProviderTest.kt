@@ -1,5 +1,6 @@
 package ru.kozobrodov.filetreedataprovider
 
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -18,7 +19,7 @@ class FileDataProviderTest {
     }
 
     @Test
-    fun `list root directory`() {
+    fun `list root directory`() = runBlocking {
         val expectedSubpaths = setOf(
                 "Inner directory",
                 "jconsole.jar",
@@ -37,7 +38,7 @@ class FileDataProviderTest {
     }
 
     @Test
-    fun `list subdirectory`() {
+    fun `list subdirectory`() = runBlocking {
         val expectedSubpath = "Inner directory${File.separator}test-txt"
         val result = dataProvider.list(listOf("Inner directory"))
         assertEquals(1, result.size)
@@ -45,7 +46,7 @@ class FileDataProviderTest {
     }
 
     @Test
-    fun `list ZIP`() {
+    fun `list ZIP`() = runBlocking {
         val expectedSubpath = "test-zip.zip${File.separator}Inner directory"
         val result = dataProvider.list(listOf("test-zip.zip"))
         assertEquals(1, result.size)
@@ -54,21 +55,29 @@ class FileDataProviderTest {
 
     @Test(expected = NotDirectoryException::class)
     fun `attempt to list non-expandable file`() {
-        dataProvider.list(listOf("test-image.jpg"))
+        runBlocking {
+            dataProvider.list(listOf("test-image.jpg"))
+        }
     }
 
     @Test(expected = UnsupportedOperationException::class)
     fun `attempt to list unsupported type of archive`() {
-        dataProvider.list(listOf("rar-archive.rar"))
+        runBlocking {
+            dataProvider.list(listOf("rar-archive.rar"))
+        }
     }
 
     @Test(expected = UnsupportedOperationException::class)
     fun `attempt to list inner ZIP archive`() {
-        dataProvider.list(listOf("zip-with-inner-zip.zip", "test-zip.zip"))
+        runBlocking {
+            dataProvider.list(listOf("zip-with-inner-zip.zip", "test-zip.zip"))
+        }
     }
 
     @Test(expected = FileNotFoundException::class)
     fun `attempt to list non-existing file`() {
-        dataProvider.list(listOf("this file doesn't exist"))
+        runBlocking {
+            dataProvider.list(listOf("this file doesn't exist"))
+        }
     }
 }
