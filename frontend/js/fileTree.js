@@ -337,6 +337,7 @@
 
         this.init = function(element) {
             // Create view container-list
+            element.empty();
             var container = $('<ul>').addClass('treeView').appendTo(element);
 
             // And render current state
@@ -428,6 +429,7 @@
             }
         }
         return this.each(function(index, e) {
+            $(e).append($('<div>').addClass('loader-big'))
             settings.dataProvider.load(function() {
                 new Core(settings).init($(e));
             });
