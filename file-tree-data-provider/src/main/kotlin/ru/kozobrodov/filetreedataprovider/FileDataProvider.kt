@@ -14,6 +14,7 @@ class FileDataProvider(private val basePath: String) {
      */
     private val typeToHandler = mapOf(
             "application/zip" to FileDataProvider::listZipArchive,
+            "application/x-zip-compressed" to FileDataProvider::listZipArchive,
             "application/java-archive" to FileDataProvider::listZipArchive,
             "application/x-java-archive" to FileDataProvider::listZipArchive,
             "application/x-rar" to FileDataProvider::listRarArchive,

@@ -38,7 +38,7 @@ class FileDataProviderTest {
 
     @Test
     fun `list subdirectory`() {
-        val expectedSubpath = "Inner directory/test-txt"
+        val expectedSubpath = "Inner directory${File.separator}test-txt"
         val result = dataProvider.list(listOf("Inner directory"))
         assertEquals(1, result.size)
         assertEquals(expectedSubpath, result[0].path)
@@ -46,7 +46,7 @@ class FileDataProviderTest {
 
     @Test
     fun `list ZIP`() {
-        val expectedSubpath = "test-zip.zip/Inner directory"
+        val expectedSubpath = "test-zip.zip${File.separator}Inner directory"
         val result = dataProvider.list(listOf("test-zip.zip"))
         assertEquals(1, result.size)
         assertEquals(expectedSubpath, result[0].path)
