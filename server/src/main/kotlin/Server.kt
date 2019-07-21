@@ -5,6 +5,7 @@ import io.ktor.application.Application
 import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.features.CORS
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode
@@ -22,6 +23,10 @@ fun Application.module() {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
         }
+    }
+
+    install(CORS) {
+        anyHost()
     }
 
     install(StatusPages) {
