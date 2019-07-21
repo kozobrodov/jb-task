@@ -9,6 +9,19 @@ There two main modules here:
 1. `file-tree-data-provider` which contains pluggable data provider for getting information
 about files in specific directory
 
+Since there modules use the same test data for tests, this test data resides in a separate
+directory [test-data](https://github.com/kozobrodov/jb-task/tree/master/test-data/).
+
+There is also a [frontend](https://github.com/kozobrodov/jb-task/tree/master/frontend) directory
+which contains code of JQuery [plugin](https://github.com/kozobrodov/jb-task/blob/master/frontend/js/fileTree.js)
+for displaying file tree, appropriate styles, fonts, etc and two test pages:
+
+1. [index.html](https://github.com/kozobrodov/jb-task/blob/master/frontend/index.html) uses
+`JsonDataProvider`, so it's possible to test plugin without any client-server communication
+— all logic is "in-browser"
+1. [service-index.html](https://github.com/kozobrodov/jb-task/blob/master/frontend/service-index.html)
+uses `ServiceDataProvider` and expects that server is running on `http://localhost:8081/` host
+
 ### Configuration
 Base directory (those one on top of which application works) is configured in
 [`application.conf`](https://github.com/kozobrodov/jb-task/blob/master/server/src/main/resources/application.conf)
