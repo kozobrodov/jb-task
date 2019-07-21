@@ -395,7 +395,10 @@
             "directory": "fas fa-folder",
             "application/pdf": "fas fa-file-pdf",
             "application/x-rar": "fas fa-file-archive",
+            "application/x-rar-compressed": "fas fa-file-archive",
             "application/zip": "fas fa-file-archive",
+            "application/x-java-archive": "fab fa-java",
+            "application/java-archive": "fab fa-java",
             "<unknown_type>": "fas fa-file",
             "image/jpeg": "fas fa-file-image",
             "text/plain": "fas fa-file-alt"
