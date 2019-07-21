@@ -9,7 +9,7 @@ There two main modules here:
 1. `file-tree-data-provider` which contains pluggable data provider for getting information
 about files in specific directory
 
-Since there modules use the same test data for tests, this test data resides in a separate
+Since these modules use the same test data for tests, this test data resides in a separate
 directory [test-data](https://github.com/kozobrodov/jb-task/tree/master/test-data/).
 
 There is also a [frontend](https://github.com/kozobrodov/jb-task/tree/master/frontend) directory
