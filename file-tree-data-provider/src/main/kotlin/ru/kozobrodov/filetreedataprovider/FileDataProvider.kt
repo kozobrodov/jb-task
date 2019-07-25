@@ -16,13 +16,13 @@ class FileDataProvider(private val basePath: String) {
     /**
      * Mapping from file MIME type to appropriate handler-method.
      */
-    private val typeToHandler = mapOf(
-            "application/zip" to FileDataProvider::listZipArchive,
-            "application/x-zip-compressed" to FileDataProvider::listZipArchive,
-            "application/java-archive" to FileDataProvider::listZipArchive,
-            "application/x-java-archive" to FileDataProvider::listZipArchive,
-            "application/x-rar" to FileDataProvider::listRarArchive,
-            "application/x-rar-compressed" to FileDataProvider::listRarArchive
+    private val typeToHandler = mapOf<String, SpecialTypeHandler>(
+            "application/zip" to this::listZipArchive,
+            "application/x-zip-compressed" to this::listZipArchive,
+            "application/java-archive" to this::listZipArchive,
+            "application/x-java-archive" to this::listZipArchive,
+            "application/x-rar" to this::listRarArchive,
+            "application/x-rar-compressed" to this::listRarArchive
     )
 
     /**
@@ -69,7 +69,7 @@ class FileDataProvider(private val basePath: String) {
                 throw FileNotFoundException("File doesn't exist")
             if (typeToHandler.containsKey(subPath.getType())) {
                 return typeToHandler[subPath.getType()]
-                        ?.invoke(this, origin, subPath, pathSegmentsIterator)
+                        ?.invoke(origin, subPath, pathSegmentsIterator)
                         ?: emptyList()
             }
             path = subPath
@@ -147,6 +147,7 @@ class FileDataProvider(private val basePath: String) {
 }
 
 data class FileData(val path: String, val type: String, val isExpandable: Boolean)
+typealias SpecialTypeHandler = (Path, Path, Iterator<String>) -> List<FileData>
 
 private val tika = Tika()
 /**
