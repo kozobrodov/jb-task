@@ -425,8 +425,8 @@
             "application/x-rar-compressed": "fas fa-file-archive rar",
             "application/zip": "fas fa-file-archive zip",
             "application/x-zip-compressed": "fas fa-file-archive zip",
-            "application/x-java-archive": "fab fa-java",
-            "application/java-archive": "fab fa-java",
+            "application/x-java-archive": "fas fa-file-archive jar",
+            "application/java-archive": "fas fa-file-archive jar",
             "<unknown_type>": "fas fa-file",
             "image/jpeg": "fas fa-file-image",
             "text/plain": "fas fa-file-alt"
