@@ -5,6 +5,21 @@
     }
 
     /**
+     * Sorting function for array of tree nodes.
+     * Directories are less then archives and
+     * archives are less then anything else.
+     */
+    function sortNodes(first, second) {
+        function weight(node) {
+            if (node.fileData.type === 'directory') {
+                return 2;
+            }
+            return node.fileData.expandable ? 1 : 0;
+        }
+        return weight(second) - weight(first);
+    }
+
+    /**
      * Implementation of file data tree which
      * uses index map (from file path to tree node)
      * for faster and easier access to tree nodes
@@ -156,7 +171,9 @@
             }
 
             this.list = function(path, callback) {
-                callback(this.tree.get(path).children);
+                var data = this.tree.get(path).children;
+                data.sort(sortNodes);
+                callback(data);
             }
 
         }
@@ -180,6 +197,7 @@
                     }
                     nodes.push(node);
                 });
+                nodes.sort(sortNodes);
                 callback(nodes);
             }
 
