@@ -24,6 +24,24 @@ ul, .treeView {
     color:#7ab4cc;
 }
 
+.rar::after {
+    content: 'rar';
+    color: #293d45;
+    position:relative;
+    top:0.3em;
+    left:-0.5em;
+    font-size:0.6em;
+}
+
+.zip::after {
+    content: 'zip';
+    color: #293d45;
+    position:relative;
+    top:0.3em;
+    left:-0.5em;
+    font-size:0.6em;
+}
+
 /* Loader: */
 .loader,
 .loader:before,
