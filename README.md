@@ -28,7 +28,18 @@ same page
 ### Configuration
 Base directory (those one on top of which application works) is configured in
 [`application.conf`](https://github.com/kozobrodov/jb-task/blob/master/server/src/main/resources/application.conf)
-file.
+file. You can use your custom configuration file using standard Ktor mechanism:
+
+```
+java -jar <app_jar_file> -config=/path/to/your/custom.conf
+```
+
+Base directory and app port can also be changed by environment variables, example:
+
+```
+export TREE_VIEW_BASE_DIR=/path/to/your/custom.conf
+java -jar <app_jar_file>
+```
 
 ### Build & run
 

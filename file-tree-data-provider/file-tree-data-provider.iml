@@ -13,23 +13,20 @@
           <option name="pluginClasspaths">
             <array />
           </option>
-          <option name="errors">
-            <ArgumentParseErrors />
-          </option>
         </compilerArguments>
       </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5">
-    <output url="file://$MODULE_DIR$/../file-tree-data-provider/target/classes" />
-    <output-test url="file://$MODULE_DIR$/../file-tree-data-provider/target/test-classes" />
-    <content url="file://$MODULE_DIR$/../file-tree-data-provider">
-      <sourceFolder url="file://$MODULE_DIR$/../file-tree-data-provider/src/main/kotlin" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../file-tree-data-provider/src/main/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/../file-tree-data-provider/src/test/kotlin" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../file-tree-data-provider/src/test/TestData" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/../file-tree-data-provider/src/test/resources" type="java-test-resource" />
-      <excludeFolder url="file://$MODULE_DIR$/../file-tree-data-provider/target" />
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/kotlin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/kotlin" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/TestData" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <content url="file://$MODULE_DIR$/../test-data">
       <sourceFolder url="file://$MODULE_DIR$/../test-data" type="java-test-resource" />
