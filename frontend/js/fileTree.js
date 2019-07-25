@@ -114,7 +114,7 @@
             // Init root node
             function initState() {
                 var rootNode = {
-                    fileData: {path: '', type: 'directory', expandable: true},
+                    fileData: {path: '', name: '', type: 'directory', expandable: true},
                     children: []
                 };
                 localStorage.setItem(storageKey, JSON.stringify(rootNode));
@@ -226,24 +226,21 @@
      */
     function Core(settings) {
         /**
-         * Extracts file name from path. In case of root
-         * directory returns element with '<root>' text
+         * Transform file name using the following rules:
+         * - If file name is empty, it's a root directory
+         *   and special element presenting it must be returned
+         * - If name is too long (more than 40 symbols), it must
+         *   be shortened using special '<...>' filler
+         * - Name itself must be returned in all other cases
          */
-        function extractFileName(path) {
-            if (path === "") { // Extra case - root directory
+        function extractFileName(name) {
+            if (name === "") { // Extra case - root directory
                 return $('<span>').addClass('meta').append('&lt;root&gt;');
             }
-            var fileName = path.replace(/^.*[\\\/]/, '');
-            if (fileName.length > 40) {
-                var dotIndex = fileName.lastIndexOf(".");
-                if (dotIndex > 0 && (fileName.length - dotIndex) < 5) {
-                    return fileName.substring(0, 30)
-                                + '<span class="meta">&lt;...&gt;</span>'
-                                + fileName.substring(dotIndex, fileName.length);
-                }
-                return fileName.substring(0, 30) + '<span class="meta">&lt;...&gt;</span>';
+            if (name.length > 40) {
+                return name.substring(0, 30) + '<span class="meta">&lt;...&gt;</span>';
             }
-            return fileName;
+            return name;
         }
 
         /**
@@ -314,7 +311,7 @@
                 .append(
                     icon,
                     ' ',
-                    extractFileName(node.fileData.path)
+                    extractFileName(node.fileData.name)
                 );
             if (node.fileData.expandable) {
                 itemContent

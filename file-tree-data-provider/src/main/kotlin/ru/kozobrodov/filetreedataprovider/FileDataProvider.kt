@@ -141,12 +141,13 @@ class FileDataProvider(private val basePath: String) {
     private fun Path.toFileData(origin: Path): FileData =
             FileData(
                     origin.resolveIgnoreFS(this.fileName),
+                    this.fileName?.toString() ?: "",
                     this.getType(),
                     this.isExpandable()
             )
 }
 
-data class FileData(val path: String, val type: String, val isExpandable: Boolean)
+data class FileData(val path: String, val name: String, val type: String, val isExpandable: Boolean)
 typealias SpecialTypeHandler = (Path, Path, Iterator<String>) -> List<FileData>
 
 private val tika = Tika()
