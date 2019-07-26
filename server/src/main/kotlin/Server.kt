@@ -39,6 +39,9 @@ fun Application.module() {
         exception<NotDirectoryException> {
             call.respond(HttpStatusCode.BadRequest, it.message ?: "Not a directory")
         }
+        exception<IllegalArgumentException> {
+            call.respond(HttpStatusCode.BadRequest, it.message ?: "Not a directory")
+        }
     }
 
     routing {

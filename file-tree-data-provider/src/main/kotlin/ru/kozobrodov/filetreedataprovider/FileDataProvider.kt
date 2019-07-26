@@ -67,6 +67,8 @@ class FileDataProvider(private val basePath: String) {
             val subPath = path.resolve(pathSegmentsIterator.next())
             if (Files.notExists(subPath))
                 throw FileNotFoundException("File doesn't exist")
+            if (!subPath.isChildOf(currentBase)) // Check that we aren't going back in tree
+                throw IllegalArgumentException("Special names are not allowed in path")
             if (typeToHandler.containsKey(subPath.getType())) {
                 return typeToHandler[subPath.getType()]
                         ?.invoke(origin, subPath, pathSegmentsIterator)
@@ -127,6 +129,12 @@ class FileDataProvider(private val basePath: String) {
      */
     private fun Path.isExpandable(): Boolean =
             Files.isDirectory(this) or typeToHandler.containsKey(this.getType())
+
+    /**
+     * Returns `true` if this path is a child of specific path
+     */
+    private fun Path.isChildOf(other: Path): Boolean =
+            this.normalize().startsWith(other)
 
     /**
      * Same as [Path.resolve], but ignores different file
