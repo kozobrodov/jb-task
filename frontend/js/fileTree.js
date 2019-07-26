@@ -20,6 +20,23 @@
     }
 
     /**
+     * Maps array of `FileData` to array of nodes
+     * and then calls `callback` with result
+     */
+    function mapToTreeNode(data, callback) {
+        var nodes = [];
+        data.forEach(function(fileData) {
+            var node = {
+                fileData: fileData,
+                children: []
+            }
+            nodes.push(node);
+        });
+        nodes.sort(sortNodes);
+        callback(nodes);
+    }
+
+    /**
      * Implementation of file data tree which
      * uses index map (from file path to tree node)
      * for faster and easier access to tree nodes
@@ -153,71 +170,75 @@
     }
 
     /**
+     * Base object for concrete data providers
+     */
+    var DataProvider = {
+
+        /*
+         * Initialization function of data provider.
+         */
+        load: function(callback) {},
+
+        /**
+         * Lists children of item with specific path.
+         * Since this operation can require client-server
+         * communication, it's result is passed back through
+         * `callback` function which takes the only argument
+         * `data` - an array of tree nodes.
+         */
+        list: function(path, callback) {}
+    }
+
+    /**
      * Data provider which loads the full directory
      * structures as JSON file
      */
-    var getJsonDataProvider = function(jsonPath) {
-        function JsonDataProvider() {
-            this.load = function(callback) {
-                $.ajax({
-                    url: jsonPath,
-                    dataType: 'json',
-                    context : this,
-                    success: function (data) {
-                        this.tree = getIndexedFileDataTree(data);
-                        callback();
-                    }
-                });
+    var JsonDataProvider = function(jsonPath) {
+        this.jsonPath = jsonPath;
+    }
+    JsonDataProvider.prototype = Object.create(DataProvider);
+    JsonDataProvider.prototype.load = function(callback) {
+        $.ajax({
+            url: this.jsonPath,
+            dataType: 'json',
+            context : this,
+            success: function (data) {
+                this.tree = getIndexedFileDataTree(data);
+                callback();
             }
-
-            this.list = function(path, callback) {
-                var data = this.tree.get(path).children;
-                data.sort(sortNodes);
-                callback(data);
-            }
-
-        }
-        return new JsonDataProvider();
+        });
+    }
+    JsonDataProvider.prototype.list = function(path, callback) {
+        var data = this.tree.get(path).children;
+        data.sort(sortNodes);
+        callback(data);
     }
 
     /**
      * Data provider which uses remote service to get
      * data about files
      */
-    var getServiceDataProvider = function(url) {
-        function ServiceDataProvider() {
-            this.load = function(callback) {callback();}
-
-            function mapToTreeNode(data, callback) {
-                var nodes = [];
-                data.forEach(function(fileData) {
-                    var node = {
-                        fileData: fileData,
-                        children: []
-                    }
-                    nodes.push(node);
-                });
-                nodes.sort(sortNodes);
-                callback(nodes);
-            }
-
-            this.list = function(path, callback, errorCallback) {
-                $.get(url + path, function(data) {mapToTreeNode(data, callback)})
-                    .fail(function(jqXHR) {
-                        switch(jqXHR.status) {
-                            case 501:
-                            case 404:
-                                alert(jqXHR.responseText);
-                                break;
-                            default:
-                                console.error(jqXHR.statusText);
-                                console.error(jqXHR);
-                        }
-                        errorCallback();
-                    });
-            }
-        }
-        return new ServiceDataProvider();
+    var ServiceDataProvider = function(url) {
+        this.url = url;
+    };
+    ServiceDataProvider.prototype = Object.create(DataProvider);
+    ServiceDataProvider.prototype.load = function(callback) {
+        callback();
+    }
+    ServiceDataProvider.prototype.list = function(path, callback) {
+        $.get(this.url + path, function(data) {mapToTreeNode(data, callback)})
+            .fail(function(jqXHR) {
+                switch(jqXHR.status) {
+                    case 501:
+                    case 404:
+                        alert(jqXHR.responseText);
+                        break;
+                    default:
+                        console.error(jqXHR.statusText);
+                        console.error(jqXHR);
+                }
+                errorCallback();
+            });
     }
 
     /**
@@ -449,12 +470,12 @@
         // Set data provider
         if (settings.hasOwnProperty('dataProvider') && settings.dataProvider == null) {
             if (settings.hasOwnProperty('serviceUrl') && settings.serviceUrl != null) {
-                settings.dataProvider = getServiceDataProvider(settings.serviceUrl);
+                settings.dataProvider = new ServiceDataProvider(settings.serviceUrl);
             } else if (
                     settings.hasOwnProperty('jsonLocation')
                     && settings.jsonLocation != null
             ) {
-               settings.dataProvider = getJsonDataProvider(settings.jsonLocation);
+               settings.dataProvider = new JsonDataProvider(settings.jsonLocation);
             } else {
                 console.error('Data provider cannot be found or chosen');
             }
